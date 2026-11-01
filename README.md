@@ -1,102 +1,101 @@
 # dsh-mqtt-tools
 
-[![CI](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml)
+[![CI](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml) [![npm](https://img.shields.io/npm/v/dsh-mqtt-tools.svg)](https://www.npmjs.com/package/dsh-mqtt-tools) [![npm downloads](https://img.shields.io/npm/dw/dsh-mqtt-tools.svg)](https://www.npmjs.com/package/dsh-mqtt-tools)
 
-An MQTT client **and** an embedded MQTT broker for [DeepSeek Harness](https://github.com/deepseek-ai/dsh), packed as one DSH plugin bundle.
+**[简体中文](README.md)** · [English](README.en.md)
 
-Open the **MQTT** panel in the sidebar, connect to a broker (or start one on this machine), subscribe, publish, and watch messages flow — and give every agent in the harness nine `mqtt_*` tools for the same engine.
+给 [DeepSeek Harness](https://github.com/deepseek-ai/dsh) 用的 MQTT 客户端 **和** 内嵌 MQTT Broker，一个插件全搞定。
 
-![Clients tab, dark theme](docs/clients-dark.png)
+在侧边栏打开 **MQTT** 面板：连接 Broker（或在本机一键起一个），订阅、发布、实时看消息；同一套引擎还以九个 `mqtt_*` 工具的形式提供给所有智能体调用。
 
-## Features
+![客户端面板（深色）](docs/clients-dark.png)
 
-- **Two tabs, one panel**
-  - **Clients** — saved connections, chat-style message log, persistent composer. One card: the topic line on top, the message box under it, send at the bottom right. Enter sends, Shift+Enter adds a newline (a composing IME never fires), and an empty topic puts the focus on the topic field. The box grows with the text and is resizable: drag the grip above it (or focus it and use ↑/↓), and the height you pick is remembered for the session. Edit a URL or a username and press connect: the draft is saved first, so the connection dials with what you see even if the settings are folded away. Retry after a failure or a drop works, and saving a new address while connected closes the old session first instead of publishing to the broker the card no longer names.
-  - **Broker** — the embedded server, connected clients, event log, and the same send card as a client at the bottom. Its settings drawer folds too — a running broker starts folded so the log gets the room — and pressing start saves the current draft before starting. Its message box resizes the same way: drag the grip above it — or focus the grip and use the arrow keys — to make room for a long payload. Retained messages are saved with the configuration and replayed after a restart; the drawer shows how many topics retain a value and clears them all in one click.
-- **Real MQTT client** — saved profiles (URL, client id, credentials, keepalive,
-  clean session, reconnect period, protocol 3.1 / 3.1.1 / 5.0), subscribe /
-  unsubscribe with QoS, publish with QoS 0–2 and retain, wildcard topics,
-  retained messages, reconnects.
-- **Embedded broker** — start it from the panel: host, port, anonymous access or
-  a user table, auto-start with DSH, protocol versions 3.1 / 3.1.1 / 5.0,
-  retained messages, persistent sessions, `$SYS` toggle, per-client
-  subscriptions, event log.
-- **Message log** — direction arrows, topic, payload (UTF-8 or base64), QoS,
-  retain flag, timestamps, newest-page paging, filter box, pause.
-- **Agent tools** — the same engine the panel uses, exposed to any agent:
-  `mqtt_list`, `mqtt_connect`, `mqtt_disconnect`, `mqtt_subscribe`,
-  `mqtt_unsubscribe`, `mqtt_publish`, `mqtt_messages`, `mqtt_wait`,
-  `mqtt_broker`.
-- **Light and dark** — surfaces are derived from the current text colour, so the
-  panel stays readable with monochrome themes as well.
+## 功能
 
-| Broker tab | Clients, light theme |
+- **一个面板，两个标签页**
+  - **客户端**：管理连接、聊天式消息流、常驻的发布输入框。一块卡片：上面一行是主题，中间是消息框，右下角发送。回车发送，Shift+回车换行（中文输入法组字时的回车不会误发），主题为空时直接把焦点放到主题上。消息框随文字长高，也能拖动：拖它上方的把手（或聚焦后用 ↑/↓），本次会话内记住你选的高度。改了地址或账号后直接点「连接」即可——会先把这份草稿保存下来再拨号，收起设置也不会丢改动。连接失败或掉线后可以直接重试；在线时改了地址再保存，会先断开旧会话，不会出现「显示新地址、消息却还发往旧 Broker」。
+  - **服务端**：内嵌 Broker、在线客户端、事件日志，底部是和客户端同款的发布卡片，设置区同样可以收起——运行中的 Broker 默认收起，把空间让给日志；点「启动」会先保存当前配置再启动。消息框同样可以拖高：拖它上方的把手（或聚焦后用 ↑/↓），发长 payload 时不用挤着看。保留消息会随配置一起保存，重启 Broker 后自动重放；抽屉里显示当前保留了多少条，可以一键清除。
+- **正经的 MQTT 客户端**：连接配置（URL、clientId、账号密码、keepalive、clean
+  session、重连间隔、协议 3.1 / 3.1.1 / 5.0），按 QoS 订阅/退订，QoS 0–2 发布、
+  retain、通配符、保留消息、断线重连。
+- **内嵌 Broker**：面板里直接启动；可设 host/端口、匿名访问或用户表、随 DSH
+  自启动；支持 3.1 / 3.1.1 / 5.0、保留消息、持久会话、`$SYS` 开关、每个客户端的
+  订阅列表、事件日志。
+- **消息日志**：方向箭头、主题、内容（UTF-8 或 base64）、QoS、retain、时间戳、
+  分页（最新 100 条起）、过滤、暂停。
+- **智能体工具**：面板用的同一套引擎，智能体可直接调用 `mqtt_list`、
+  `mqtt_connect`、`mqtt_disconnect`、`mqtt_subscribe`、`mqtt_unsubscribe`、
+  `mqtt_publish`、`mqtt_messages`、`mqtt_wait`、`mqtt_broker`。
+- **亮色/暗色主题**：界面底色由当前文字色推导，单色主题下也看得清。
+
+| 服务端 | 客户端（浅色） |
 | --- | --- |
-| ![Broker tab](docs/broker-dark.png) | ![Clients, light](docs/clients-light.png) |
+| ![服务端](docs/broker-dark.png) | ![客户端浅色](docs/clients-light.png) |
 
-## Install
+## 安装
 
-The plugin is a DSH bundle: it ships `package.json` with a `dsh.bundle.patch`,
-a host half (`index.js` + `lib/`) and a browser half (`client.js`).
+插件是 DSH Bundle：`package.json` 里带 `dsh.bundle.patch`，由服务端一半
+（`index.js` + `lib/`）和浏览器一半（`client.js`）组成。已经发布到 npm：
+[`dsh-mqtt-tools`](https://www.npmjs.com/package/dsh-mqtt-tools)。
+
+### 从 npm 安装（推荐）
 
 ```powershell
-# 1. install the package into your DSH profile (plugin manager → Install bundle,
-#    the DSH market, or your profile's package manager)
-dsh plugin add dsh-mqtt-tools
+# 1. 让 DSH 从 npm 装上这个包（plugin_manager → install_bundle → target: dsh-mqtt-tools）
+plugin_manager install_bundle { "target": "dsh-mqtt-tools" }
 
-# 2. enable the "MQTT Tools" bundle when DSH lists it
+# 2. DSH 列出 “MQTT 工具” 后启用它
 ```
 
-From a source checkout:
+### 从源码安装
 
 ```powershell
+git clone https://github.com/GodLike2020/dsh-mqtt-tools.git
 cd dsh-mqtt-tools
 npm install
-# then: Settings → Plugins → Install bundle → target: this folder
-# (or: plugin_manager → install_bundle → target: <absolute path>)
+# 然后：设置 → 插件 → 安装 Bundle → 目标：本目录
+# （或 plugin_manager → install_bundle → target: 绝对路径）
 ```
 
-Restart/reload DSH once after installing; the **MQTT** entry appears in the
-sidebar. No configuration is required — the panel starts empty.
+如果习惯自己管理 profile 依赖，也可以用 `dsh plugin add dsh-mqtt-tools`。
 
-> The plugin never edits your profile's `package.json` or `cordis.patch.yml` by
-> hand: bundle installation and patching go through DSH's own installer.
+装完重载一次 DSH，侧边栏出现 **MQTT**。不需要任何配置，面板初始为空。
 
-## Using the panel
+> 插件不会手改你 profile 的 `package.json` / `cordis.patch.yml`：Bundle 的安装和
+> patch 都走 DSH 自己的安装器。
 
-1. **Clients → New connection**: give it a name and a URL such as
-   `mqtt://127.0.0.1:1883` or `mqtts://broker.example.com:8883` (TLS uses Node's
-   default certificate store; `rejectUnauthorized` can be turned off per
-   connection for self-signed brokers), plus optional username/password,
-   client id, keepalive and protocol version.
-2. **Connect**, then add subscriptions (`sensors/+/temperature`, `#`, …).
-3. Type a topic and a message in the composer at the bottom and press Enter —
-   messages arrive above it, newest at the bottom.
-4. **Broker → Start** to run a local MQTT server. Point other devices or
-   clients at `mqtt://<this machine>:1883`. If anonymous access is off, add
-   users in the same tab and check the credentials in the connect form.
+## 怎么用
 
-The window is resizable: drag the divider between the connection list and the
-message area. Per-connection settings collapse to leave more room for messages.
+1. **客户端 → 新建连接**：填名字和 URL，例如 `mqtt://127.0.0.1:1883`、
+   `mqtts://broker.example.com:8883`（TLS 用 Node 默认证书链；自签 Broker 可在该
+   连接里关掉 `rejectUnauthorized`），再按需填账号密码、clientId、keepalive、
+   协议版本。
+2. **连接**，然后添加订阅（`sensors/+/temperature`、`#` 等）。
+3. 在底部常驻输入框里填主题和内容，回车发送——消息在输入框上方滚动，最新在下。
+4. **服务端 → 启动**，起一个本机 MQTT 服务，其他设备/客户端连
+   `mqtt://<本机>:1883`。若关掉匿名访问，在同一页签添加用户，并在连接表单填账号。
 
-## Agent tools
+窗口宽度可拖动调整（连接列表与消息区之间的分隔条）；每个连接的设置区可收起，
+给消息区让位置。
 
-Every tool talks to the same engine as the panel, so a connection configured in
-the GUI is immediately usable by an agent, and vice versa.
+## 智能体工具
 
-| Tool | What it does |
+工具和面板共用同一套引擎：在界面里配好的连接，智能体立刻能用；智能体建的连接，
+界面里也能看到。
+
+| 工具 | 作用 |
 | --- | --- |
-| `mqtt_list` | List connections (id, name, URL, status, subscriptions) and broker state. |
-| `mqtt_connect` | Connect a saved connection by id/name, or create-and-connect with a `url`. |
-| `mqtt_disconnect` | Close a connection. |
-| `mqtt_subscribe` | Subscribe a connection to a topic filter with a QoS (persisted). |
-| `mqtt_unsubscribe` | Remove a subscription. |
-| `mqtt_publish` | Publish through a connection or through the embedded broker. |
-| `mqtt_messages` | Read recent messages, filtered by connection/source/direction/topic. |
-| `mqtt_wait` | Wait for matching messages (like `mosquitto_sub`), with a lookback window. |
-| `mqtt_broker` | Show, start, stop or save the embedded broker. |
+| `mqtt_list` | 列出连接（id、名字、URL、状态、订阅）和 Broker 状态。 |
+| `mqtt_connect` | 按 id/名字连接已保存的连接，或直接用 `url` 新建并连接。 |
+| `mqtt_disconnect` | 断开连接。 |
+| `mqtt_subscribe` | 按 QoS 订阅主题（持久保存）。 |
+| `mqtt_unsubscribe` | 退订。 |
+| `mqtt_publish` | 通过某个连接或内嵌 Broker 发布。 |
+| `mqtt_messages` | 读最近消息，可按连接/来源/方向/主题过滤。 |
+| `mqtt_wait` | 等待匹配的消息（类似 `mosquitto_sub`），带回溯窗口。 |
+| `mqtt_broker` | 查看/启动/停止/保存内嵌 Broker。 |
 
-A typical agent flow:
+典型智能体流程：
 
 ```text
 mqtt_broker start
@@ -106,106 +105,95 @@ mqtt_wait    connection=local topic="sensors/#" timeoutMs=10000
 mqtt_publish via=client connection=local topic="devices/lamp/set" payload="on" qos=1
 ```
 
-Message payloads are returned as UTF-8 when they decode cleanly and as base64
-otherwise; `encoding: "base64"` on `mqtt_publish` sends binary payloads.
+内容能按 UTF-8 解码就返回文本，否则返回 base64；`mqtt_publish` 传
+`encoding: "base64"` 可发送二进制。
 
 ## HTTP API
 
-The panel is not privileged: it uses the same API any local tool can.
+面板没有特权，它和任何本机工具用的是同一个 API。
 
-| Method | Path | Purpose |
+| 方法 | 路径 | 作用 |
 | --- | --- | --- |
-| `GET` | `/dsh-mqtt-tools/api/state` | Current state (connections, broker, tools, state file) + recent messages/events. |
-| `POST` | `/dsh-mqtt-tools/api/command` | One command: `client.*`, `broker.*`, `settings.save`, `log.clear`. |
-| `GET` | `/dsh-mqtt-tools/api/events` | Server-Sent Events: `state`, `message`, `broker-event`, `cleared`. |
+| `GET` | `/dsh-mqtt-tools/api/state` | 当前状态（连接、Broker、工具、状态文件）+ 最近消息/事件。 |
+| `POST` | `/dsh-mqtt-tools/api/command` | 单条命令：`client.*`、`broker.*`、`settings.save`、`log.clear`。 |
+| `GET` | `/dsh-mqtt-tools/api/events` | SSE：`state`、`message`、`broker-event`、`cleared`。 |
 
-`POST` requires the `x-dsh-mqtt-tools: 1` header and a same-origin request;
-passwords are write-only (the API returns `hasPassword`, never the value).
+`POST` 需要 `x-dsh-mqtt-tools: 1` 请求头和同源校验；密码只写不读
+（返回 `hasPassword`，永远不返回值）。
 
-## Protocol versions
+## 协议版本
 
-- **MQTT 3.1.1** — the native protocol of the embedded broker (`aedes`).
-- **MQTT 3.1** — accepted, with 3.1 framing.
-- **MQTT 5.0** — accepted on the same port. A translation layer converts the
-  MQTT 5 session to 3.1.1 internally and re-encodes replies as MQTT 5, so MQTT 5
-  clients connect, subscribe, publish, use QoS 1/2, retained messages and
-  persistent sessions. MQTT-5-only features (properties, shared subscriptions,
-  topic aliases, flow control) are not advertised and not implemented — the
-  broker behaves like an MQTT 3.1.1 broker from the client's point of view.
-  Subscription options such as `noLocal` and `retainHandling` are accepted but
-  ignored: a client may receive its own publishes and retained messages are sent
-  on every matching subscribe.
+- **MQTT 3.1.1** — 内嵌 Broker（`aedes`）的原生协议。
+- **MQTT 3.1** — 接受，按 3.1 帧解析。
+- **MQTT 5.0** — 同一端口接受。通过一层转换把 MQTT 5 会话译成 3.1.1 交给
+  Broker，再把回复编码回 MQTT 5，因此 MQTT 5 客户端能连接、订阅、发布、用 QoS
+  1/2、保留消息和持久会话。MQTT 5 独有的能力（属性、共享订阅、主题别名、流控）
+  不宣告、也不实现——从客户端视角看它就是一个 3.1.1 Broker。
+  订阅选项里的 `noLocal`、`retainHandling` 会被接受但忽略：客户端可能收到自己
+  发布的消息，且每次匹配订阅都会收到保留消息。
 
-Each version can be disabled in the Broker tab; a disabled version is refused
-with a proper CONNACK (`0x84` for MQTT 5, return code 1 for 3.1/3.1.1) and the
-refusal is written to the broker event log.
+每个版本都可以在“服务端”页签关掉；关掉的版本会被正常 CONNACK 拒绝
+（MQTT 5 为 `0x84`，3.1/3.1.1 为 return code 1），并写进 Broker 事件日志。
 
-### Resource limits
+### 资源上限
 
-The embedded broker keeps a misbehaving client from exhausting the host process:
+内嵌 Broker 会限制异常客户端，避免拖垮 DSH 进程：
 
-| Setting | Default | Effect |
+| 设置 | 默认值 | 作用 |
 | --- | --- | --- |
-| `maxConnections` | `200` (0 = unlimited) | Extra TCP connections are closed as soon as they arrive, with an event in the broker log. |
-| `connectTimeoutMs` | `10000` | A socket that does not send a CONNECT in time is closed and logged. |
-| `maxPayloadBytes` | `1048576` (1 MiB) | Larger client publishes (and wills) disconnect the client; the panel's publish form and `mqtt_publish` get a normal error instead. |
-| `maxRetainedMessages` | `1000` (0 = unlimited) | A retained publish that would add a topic beyond the cap is refused; clearing a retained topic with an empty payload frees a slot. |
+| `maxConnections` | `200`（0 = 不限） | 超出的 TCP 连接一到就被关闭，并写 Broker 事件日志。 |
+| `connectTimeoutMs` | `10000` | 连上后在时限内没发 CONNECT 的 socket 会被关闭并记录原因。 |
+| `maxPayloadBytes` | `1048576`（1 MiB） | 更大的客户端 PUBLISH（含遗嘱）会断开该客户端；面板发布框和 `mqtt_publish` 会得到普通错误提示，不会断连。 |
+| `maxRetainedMessages` | `1000`（0 = 不限） | 超出上限的保留消息发布会被拒绝；用空 payload 清除一条保留消息即可腾出名额。 |
 
-They are stored with the other broker settings and can be changed in the Broker
-tab, with the `mqtt_broker save` agent tool or through
-`POST /dsh-mqtt-tools/api/command`:
+这些值和其他 Broker 设置一起存盘，可以在“服务端”页签的「资源上限」里直接修改，
+也可通过 `mqtt_broker save` 工具或 `POST /dsh-mqtt-tools/api/command` 修改：
 
 ```jsonc
 { "cmd": "broker.save", "broker": { "maxPayloadBytes": 262144, "maxRetainedMessages": 200 } }
 ```
 
-Restart the broker to make the listener-related settings apply where noted; the
-payload/retained budgets are enforced live.
+监听相关设置改完需重启 Broker 生效；payload/保留消息预算实时生效。
 
-## Where state lives
+## 状态文件
 
-`$DSH_HOME/dsh-mqtt-tools.json` (default `~/.dsh/dsh-mqtt-tools.json`): connection
-profiles (passwords included, file permissions are your OS account's), broker
-settings and the `$SYS` toggle. Upgrading from 0.2.x renames and adopts the old
-`dsh-mqtt.json` automatically.
+`$DSH_HOME/dsh-mqtt-tools.json`（默认 `~/.dsh/dsh-mqtt-tools.json`）：连接配置
+（含密码，权限即你的系统账号权限）、Broker 设置、`$SYS` 开关。从 0.2.x 升级会
+自动接管旧的 `dsh-mqtt.json`。
 
-## Testing
+## 测试
 
-The repository ships a self-contained suite (dev only, not part of the published
-package):
+仓库自带测试套件（仅开发用，不随 npm 包发布）：
 
 ```powershell
-node scripts/suite/run-all.mjs              # all suites, sequential
-node scripts/suite/run-all.mjs protocol     # filter by name
-node scripts/suite/ui.test.mjs              # one suite
+node scripts/suite/run-all.mjs              # 全部套件，串行
+node scripts/suite/run-all.mjs protocol     # 按名字过滤
+node scripts/suite/ui.test.mjs              # 单跑一个
 ```
 
-| Suite | Covers |
+| 套件 | 覆盖 |
 | --- | --- |
-| `protocol` | MQTT 3.1 / 3.1.1 / 5.0, wills, persistent sessions, retained, wildcards, QoS, malformed input, version gating. |
-| `interop` | Our broker against external clients; our client against public brokers and a real broker. |
-| `api-tools` | HTTP contract, CSRF/origin/limits, security, all nine agent tools end to end. |
-| `ui` | Server-side render of every panel state, jsdom interaction, i18n parity, contrast audit. |
-| `lifecycle` | SSE/hub leaks, state durability, port conflicts, restart/dispose, reconnect. |
-| `perf` | Throughput, ring-log bounds, large payloads, connection storms, SSE fan-out. |
-| `hardening` | Payload previews stay bounded before they enter the ring; SSE backpressure drops stalled pages instead of buffering forever. |
-| `resilience` | Start/stop races, awaitable dispose with port release, CONNECT timeout, connection/payload/retained caps, limit persistence. |
+| `protocol` | MQTT 3.1/3.1.1/5.0、遗嘱、持久会话、保留消息、通配符、QoS、畸形输入、版本开关。 |
+| `interop` | 外部客户端连我们的 Broker；我们的客户端连公共 Broker。 |
+| `api-tools` | HTTP 契约、CSRF/同源/限额、安全泄漏、九个工具端到端。 |
+| `ui` | 所有面板状态的 SSR、jsdom 交互、中英文案一致性、对比度审计。 |
+| `lifecycle` | SSE/hub 泄漏、状态持久化、端口冲突、重启/dispose、重连。 |
+| `perf` | 吞吐、环形日志上限、大 payload、连接风暴、SSE 扇出。 |
+| `hardening` | payload 预览在进入环形日志前就被截断；SSE 背压会把停止读取的页面丢弃，而不是无限缓冲。 |
+| `resilience` | start/stop 竞态、可等待的 dispose（端口确实释放）、CONNECT 超时、连接/payload/保留消息上限、上限持久化。 |
 
-Suites isolate themselves with a temporary `DSH_HOME` and random ports; live
-suites need a running DSH GUI and take `DSH_BASE` (for example
-`$env:DSH_BASE="http://127.0.0.1:10570"`).
+套件用临时 `DSH_HOME` 和随机端口自我隔离；live 套件需要 DSH GUI 在跑，用
+`DSH_BASE` 指定（如 `$env:DSH_BASE="http://127.0.0.1:10570"`）。
 
-## Notes
+## 说明
 
-- The embedded broker speaks plain MQTT over TCP; there is no WebSocket or TLS
-  listener yet. Expose it on your LAN deliberately (and open the firewall port).
-- A panel visual check can be rendered without a DSH GUI via
-  `node scripts/preview-shot.mjs dark` (dev only; `npm install` brings the dev
-  dependencies, a local `.testtools/` install works just as well).
-- `$SYS/broker/...` traffic is hidden from the message log unless the toggle in
-  the Broker tab is on.
-- The plugin is English + Chinese, following the harness locale.
+- 内嵌 Broker 目前只有明文 MQTT over TCP，没有 WebSocket/TLS 监听。要暴露到局域网
+  请自己决定并放行防火墙端口。
+- 不装 DSH GUI 也能截图看面板：`node scripts/preview-shot.mjs dark`（仅开发用，
+  `npm install` 会装好开发依赖；本地用 `.testtools/` 装也一样）。
+- `$SYS/broker/...` 默认不进消息日志，服务端页签里有开关。
+- 支持中英文，跟随 Harness 语言。
 
-## License
+## 许可证
 
-MIT — see [LICENSE](LICENSE).
+MIT — 见 [LICENSE](LICENSE)。
