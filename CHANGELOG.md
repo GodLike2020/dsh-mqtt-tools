@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.12 — 2026-11-01
+
+Packaging and docs pass; no code change.
+
+- The package is on npm as `dsh-mqtt-tools` (https://www.npmjs.com/package/dsh-mqtt-tools).
+  The install section now treats `plugin_manager install_bundle` from npm as the
+  recommended route and keeps the source checkout as the alternative.
+- npm version and weekly-download badges sit next to the CI badge.
+- README.md is the Chinese page and README.en.md the English one, each with a
+  switch line at the top so the repository lands on Chinese first.
+- Both READMEs end with the official “powered by dsh” badge linking to the
+  harness repository.
+
 ## 0.3.11 — 2026-11-01
 
 The broker's send card can be resized again.
