@@ -1,0 +1,6 @@
+# Installs the MQTT Tools bundle into the DSH profile when this package is
+# selected. The plugin registers a sidebar panel, a JSON + SSE HTTP API and the
+# mqtt_* agent tools.
+- insert:
+    - id: mqtt-tools
+      name: dsh-mqtt-tools

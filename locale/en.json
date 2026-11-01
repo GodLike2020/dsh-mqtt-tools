@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "MQTT Tools",
+    "description": "MQTT client connections and an embedded broker: subscribe and publish on real brokers, or start a local MQTT server — all from one panel, with mqtt_* agent tools."
+  }
+}

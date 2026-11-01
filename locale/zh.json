@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "MQTT 工具",
+    "description": "MQTT 客户端连接和内嵌 Broker：连接真实 Broker 收发消息，或一键启动本机 MQTT 服务端，面板内完成，并提供 mqtt_* 智能体工具。"
+  }
+}
