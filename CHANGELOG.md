@@ -10,8 +10,8 @@ Packaging and docs pass; no code change.
 - npm version and weekly-download badges sit next to the CI badge.
 - README.md is the Chinese page and README.en.md the English one, each with a
   switch line at the top so the repository lands on Chinese first.
-- Both READMEs end with the official “powered by dsh” badge linking to the
-  harness repository.
+- Both READMEs carry the official “powered by dsh” badge in the same row as
+  the CI and npm badges, linking to the harness repository.
 
 ## 0.3.11 — 2026-11-01
 

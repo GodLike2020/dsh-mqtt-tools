@@ -1,6 +1,6 @@
 # dsh-mqtt-tools
 
-[![CI](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml) [![npm](https://img.shields.io/npm/v/dsh-mqtt-tools.svg)](https://www.npmjs.com/package/dsh-mqtt-tools) [![npm downloads](https://img.shields.io/npm/dw/dsh-mqtt-tools.svg)](https://www.npmjs.com/package/dsh-mqtt-tools)
+[![CI](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/GodLike2020/dsh-mqtt-tools/actions/workflows/ci.yml) [![npm](https://img.shields.io/npm/v/dsh-mqtt-tools.svg)](https://www.npmjs.com/package/dsh-mqtt-tools) [![npm downloads](https://img.shields.io/npm/dw/dsh-mqtt-tools.svg)](https://www.npmjs.com/package/dsh-mqtt-tools) [![](https://img.shields.io/badge/powered_by-dsh-4D6BFE?style=flat-square&logo=deepseek&logoColor=white)](https://github.com/deepseek-ai/deepseek-harness)
 
 [简体中文](README.md) · **[English](README.en.md)**
 
@@ -217,5 +217,3 @@ suites need a running DSH GUI and take `DSH_BASE` (for example
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
-[![](https://img.shields.io/badge/powered_by-dsh-4D6BFE?style=flat-square&logo=deepseek&logoColor=white)](https://github.com/deepseek-ai/deepseek-harness)
