@@ -64,6 +64,23 @@ npm install
 > 插件不会手改你 profile 的 `package.json` / `cordis.patch.yml`：Bundle 的安装和
 > patch 都走 DSH 自己的安装器。
 
+## 兼容性说明：DSH ≤ 0.2.2-alpha.2 的已知问题
+
+DSH 的 profile 解析器有一个 bug：插件依赖树里出现 `require('<内置模块名>/')` 这种
+「尾斜杠 + 内置模块名」的请求时（`readable-stream` 4.x 就是典型），解析器会崩溃，
+插件表现为加载失败，日志里只有一行 `failed to import`。
+
+`dsh-mqtt-tools` 依赖 `mqtt` → `readable-stream@4.x`，所以从 0.3.13 起内置了一层
+**过渡规避**：插件启动时同步预载 `readable-stream` 的 Node 原生流模式
+（`READABLE_STREAM=disable`），让上述请求不再发生。它在已修复的 DSH 上无害——若你的
+DSH 已修复，无需任何操作；等宿主修复普遍可用后，这层规避会被移除。
+
+- 受影响版本：DSH `0.1.7-rc.2` … `0.2.2-alpha.2`（含桌面版 `0.2.1-rc.5`），典型报错为
+  `TypeError: createRequire.resolve.paths is not a function or its return value is not iterable`
+- 不受影响：依赖树里没有 `readable-stream@4.x` 的插件；以及修复后的 DSH
+- 该规避只覆盖 `readable-stream` 一族；`punycode/`、`buffer/index` 等同源问题仍需
+  宿主修复
+
 ## 怎么用
 
 1. **客户端 → 新建连接**：填名字和 URL，例如 `mqtt://127.0.0.1:1883`、

@@ -1,6 +1,6 @@
 {
   "name": "dsh-mqtt-tools",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "description": "MQTT client and embedded broker for DeepSeek Harness: named connections, subscribe and publish, a live message log, a local MQTT server (3.1 / 3.1.1 / 5.0) and nine mqtt_* agent tools — from one panel.",
   "icon": "icon.svg",
   "type": "module",
@@ -71,7 +71,8 @@
   "dependencies": {
     "aedes": "^1.2.0",
     "mqtt": "^5.16.1",
-    "mqtt-packet": "^9.0.2"
+    "mqtt-packet": "^9.0.2",
+    "readable-stream": "4.8.0"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",

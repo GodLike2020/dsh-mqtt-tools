@@ -1,4 +1,4 @@
-# dsh-mqtt-tools 0.3.11
+# dsh-mqtt-tools 0.3.13
 
 MQTT client **and** an embedded MQTT broker for
 [DeepSeek Harness](https://github.com/deepseek-ai/dsh), in one plugin bundle:
@@ -57,6 +57,18 @@ npm run test:offline     # protocol 31 / lifecycle 35 / perf 9 / ui 43
 ports with temporary state files. As of this release: **118 passed, 0 failed,
 1 skipped** (the skipped check needs a token-authenticated live GUI).
 
+## Changes in 0.3.13
+
+- Loads again on DSH builds whose profile resolver crashes on trailing-slash builtin
+  requests (`TypeError: createRequire.resolve.paths is not a function or its return value
+  is not iterable`). Affected: DSH `0.1.7-rc.2` … `0.2.2-alpha.2`, including the desktop
+  `0.2.1-rc.5` build. The plugin now synchronously primes `readable-stream` in native
+  stream mode before `mqtt` loads, so the resolver never sees `require('process/')`;
+  `readable-stream@4.8.0` is pinned so the primed module is the one `mqtt` resolves.
+- Transitional workaround: on fixed DSH builds nothing is needed, and it will be removed
+  once the host fix is widely available. It covers the `readable-stream` family only —
+  `punycode/`, `buffer/index` and similar requests still need the host fix.
+
 ## Changes in 0.3.11
 
 - The broker's send card got the resize grip back: drag it (or focus it and use
@@ -74,7 +86,7 @@ MIT — see [LICENSE](../LICENSE).
 
 ---
 
-# dsh-mqtt-tools 0.3.11（中文）
+# dsh-mqtt-tools 0.3.13（中文）
 
 一个 DeepSeek Harness 插件：侧边栏里的 **MQTT 面板**（客户端 + 内嵌 Broker），
 同时给 Harness 里每个 Agent 提供九个 `mqtt_*` 工具。
@@ -103,6 +115,11 @@ MIT — see [LICENSE](../LICENSE).
 
 **测试**：`npm install && npm run test:offline`，离线跑真实 Broker/客户端，
 本版本为 **118 passed / 0 failed / 1 skipped**。
+
+**0.3.13 变化**：修复在受影响的 DSH（`0.1.7-rc.2` … `0.2.2-alpha.2`，含桌面版
+`0.2.1-rc.5`）上依赖库加载失败的问题——插件启动时同步预载 `readable-stream` 的
+Node 原生流模式，宿主解析器不再遇到 `require('process/')`；已修复的 DSH 上无需
+任何操作。该规避只覆盖 `readable-stream` 一族，`punycode/` 等仍需宿主修复。
 
 **0.3.11 变化**：服务端发布卡找回可拖动的高度调节（也支持 ↑/↓），手动拖过的
 高度在发送和切换标签页后保留；补了 GitHub Actions CI，`npm install` 会装好

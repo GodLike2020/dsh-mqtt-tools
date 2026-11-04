@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.3.13 — 2026-11-04
+
+Host compatibility pass: the plugin now loads on DSH builds whose profile resolver is broken.
+
+- On the affected DSH versions the plugin's tools still register, but `library.mqtt` is
+  false: loading `mqtt` → `readable-stream@4.x` dies in the host resolver with
+  `TypeError: createRequire.resolve.paths is not a function or its return value is not
+  iterable`. Range: DSH `0.1.7-rc.2` … `0.2.2-alpha.2`, including the desktop
+  `0.2.1-rc.5` build.
+- A new `lib/dsh-native-streams.js` synchronously preloads `readable-stream` in native
+  Node stream mode (`READABLE_STREAM=disable`) before `mqtt` is imported, so
+  `readable-stream/lib/internal/shims/process.js` never issues `require('process/')`.
+- `readable-stream@4.8.0` is a pinned direct dependency so that, under DSH's hoisted
+  profile layout, the preloaded module is the same instance `mqtt` resolves.
+- Transitional workaround only: fixed DSH builds no longer need it; it still runs there
+  and is harmless, and it will be removed once the host fix is widely released.
+- It covers the `readable-stream` family only; other trailing-slash requests such as
+  `punycode/` and `buffer/index` still need the host fix.
+
 ## 0.3.12 — 2026-11-01
 
 Packaging and docs pass; no code change.

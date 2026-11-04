@@ -70,6 +70,26 @@ sidebar. No configuration is required — the panel starts empty.
 > The plugin never edits your profile's `package.json` or `cordis.patch.yml` by
 > hand: bundle installation and patching go through DSH's own installer.
 
+## Compatibility note: known issue on DSH ≤ 0.2.2-alpha.2
+
+DSH's profile resolver has a bug: when a plugin's dependency tree contains a request
+such as `require('<builtin-name>/')` — the trailing-slash form used by polyfill-era
+packages — the resolver crashes, and the plugin fails to load with only a generic
+`failed to import` line in the host log. `readable-stream` 4.x does this
+(`require('process/')`), and `dsh-mqtt-tools` depends on `mqtt` → `readable-stream@4.x`.
+
+Since 0.3.13 the plugin ships a **transitional workaround**: at startup it synchronously
+preloads `readable-stream` in the native Node stream mode (`READABLE_STREAM=disable`),
+so the offending request never happens. It is harmless on fixed DSH versions — if your
+DSH already has the fix, there is nothing to do — and will be removed once the host fix
+is widely available.
+
+- Affected: DSH `0.1.7-rc.2` … `0.2.2-alpha.2` (including desktop `0.2.1-rc.5`); the
+  symptom is `TypeError: createRequire.resolve.paths is not a function or its return value is not iterable`
+- Unaffected: plugins without `readable-stream@4.x` in their tree; fixed DSH builds
+- This workaround covers the `readable-stream` family only; `punycode/`, `buffer/index`
+  and similar cases still require the host fix.
+
 ## Using the panel
 
 1. **Clients → New connection**: give it a name and a URL such as
