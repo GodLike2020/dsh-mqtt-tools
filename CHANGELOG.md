@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.3.14 — 2026-11-16
+
+Upgrade fix: the plugin no longer pins `readable-stream`.
+
+- There is no direct `readable-stream` dependency any more. 0.3.13 pinned
+  `readable-stream@4.8.0`; pinning a transitive package forced DSH's profile install to
+  re-resolve that exact version on every plugin upgrade, so a stale profile lockfile or
+  a slow registry could fail the upgrade of an otherwise healthy plugin. The copy mqtt
+  resolves is what matters, and it is already installed by mqtt itself.
+- The host-compatibility preload now resolves the copies through their real consumers
+  (`mqtt`, and `mqtt-packet` → `bl`) instead of assuming one hoisted copy. A hoisted
+  profile and a split install are both primed in native stream mode while
+  `READABLE_STREAM=disable` is set, then the previous environment value is restored.
+- New regression suite `scripts/suite/host-compat.test.mjs`: builds a split tree with
+  two distinct copies, asserts both are primed with `READABLE_STREAM=disable`, checks the
+  environment is restored, and guards `package.json` against re-adding the pin.
+- Transitional workaround unchanged in scope: fixed DSH builds need nothing, and this
+  shim will be deleted once the host resolver fix is widely released.
+
 ## 0.3.13 — 2026-11-04
 
 Host compatibility pass: the plugin now loads on DSH builds whose profile resolver is broken.

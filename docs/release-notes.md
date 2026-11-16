@@ -1,4 +1,4 @@
-# dsh-mqtt-tools 0.3.13
+# dsh-mqtt-tools 0.3.14
 
 MQTT client **and** an embedded MQTT broker for
 [DeepSeek Harness](https://github.com/deepseek-ai/dsh), in one plugin bundle:
@@ -50,12 +50,26 @@ The repository ships its test suites:
 
 ```bash
 npm install
-npm run test:offline     # protocol 31 / lifecycle 35 / perf 9 / ui 43
+npm run test:offline     # protocol 31 / lifecycle 35 / perf 9 / ui 43 / host-compat 3
 ```
 
 `test:offline` needs no DSH GUI: it runs real brokers and clients on isolated
-ports with temporary state files. As of this release: **118 passed, 0 failed,
-1 skipped** (the skipped check needs a token-authenticated live GUI).
+ports with temporary state files. The 0.3.13 baseline was **118 passed, 0 failed,
+1 skipped** (the skipped check needs a token-authenticated live GUI); 0.3.14 adds
+the 3 `host-compat` checks.
+
+## Changes in 0.3.14
+
+- Plugin upgrades no longer depend on a pinned transitive package. 0.3.13 declared
+  `readable-stream@4.8.0` directly, which made DSH re-resolve that exact version whenever
+  the profile was updated; a stale lockfile or a slow registry could fail the upgrade of
+  an otherwise healthy plugin.
+- The compatibility preload now resolves the readable-stream copies through their real
+  consumers (`mqtt`, and `mqtt-packet` → `bl`), so hoisted and split installs are both
+  primed without a direct dependency. Behaviour on fixed DSH builds is unchanged.
+- New `host-compat` suite (3 tests) builds a split tree, checks both copies are primed
+  with `READABLE_STREAM=disable`, checks the environment is restored, and guards
+  `package.json` against re-adding the dependency.
 
 ## Changes in 0.3.13
 
@@ -86,7 +100,7 @@ MIT — see [LICENSE](../LICENSE).
 
 ---
 
-# dsh-mqtt-tools 0.3.13（中文）
+# dsh-mqtt-tools 0.3.14（中文）
 
 一个 DeepSeek Harness 插件：侧边栏里的 **MQTT 面板**（客户端 + 内嵌 Broker），
 同时给 Harness 里每个 Agent 提供九个 `mqtt_*` 工具。
@@ -113,8 +127,14 @@ MIT — see [LICENSE](../LICENSE).
 `plugin_manager install_bundle` 装（npm 包名 `dsh-mqtt-tools`，或指向本目录的
 绝对路径），启用 **MQTT 工具** 后从侧边栏打开 **MQTT** 面板。
 
-**测试**：`npm install && npm run test:offline`，离线跑真实 Broker/客户端，
-本版本为 **118 passed / 0 failed / 1 skipped**。
+**测试**：`npm install && npm run test:offline`，离线跑真实 Broker/客户端；0.3.14
+新增 `host-compat` 3 项（拆分安装下两份 readable-stream 都被预载、环境被还原、
+package.json 不再声明该依赖），总数以运行结果为准。
+
+**0.3.14 变化**：不再锁定 `readable-stream`。0.3.13 把 `readable-stream@4.8.0`
+声明成直接依赖，导致每次升级都要重新解析这个精确版本，profile 锁文件过期或仓库较慢
+时会让本来正常的插件升级失败。兼容预载改为按 `mqtt` 与 `mqtt-packet → bl` 实际解析
+到的副本来做，提升和拆分安装都覆盖，且插件不再声明该依赖。
 
 **0.3.13 变化**：修复在受影响的 DSH（`0.1.7-rc.2` … `0.2.2-alpha.2`，含桌面版
 `0.2.1-rc.5`）上依赖库加载失败的问题——插件启动时同步预载 `readable-stream` 的

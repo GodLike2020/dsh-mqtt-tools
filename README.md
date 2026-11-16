@@ -72,8 +72,12 @@ DSH 的 profile 解析器有一个 bug：插件依赖树里出现 `require('<内
 
 `dsh-mqtt-tools` 依赖 `mqtt` → `readable-stream@4.x`，所以从 0.3.13 起内置了一层
 **过渡规避**：插件启动时同步预载 `readable-stream` 的 Node 原生流模式
-（`READABLE_STREAM=disable`），让上述请求不再发生。它在已修复的 DSH 上无害——若你的
-DSH 已修复，无需任何操作；等宿主修复普遍可用后，这层规避会被移除。
+（`READABLE_STREAM=disable`），让上述请求不再发生。预载按 `mqtt` 和
+`mqtt-packet → bl` 实际解析到的副本来做，安装布局是提升（hoisted）还是拆分
+（split）都能覆盖；插件本身**不声明、也不锁定** `readable-stream` 版本——锁定一个
+传递依赖会让每次插件升级都要重新解析那个精确版本，反而让升级失败。它在已修复的
+DSH 上无害——若你的 DSH 已修复，无需任何操作；等宿主修复普遍可用后，这层规避会被
+移除。
 
 - 受影响版本：DSH `0.1.7-rc.2` … `0.2.2-alpha.2`（含桌面版 `0.2.1-rc.5`），典型报错为
   `TypeError: createRequire.resolve.paths is not a function or its return value is not iterable`

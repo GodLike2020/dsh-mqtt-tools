@@ -80,9 +80,13 @@ packages — the resolver crashes, and the plugin fails to load with only a gene
 
 Since 0.3.13 the plugin ships a **transitional workaround**: at startup it synchronously
 preloads `readable-stream` in the native Node stream mode (`READABLE_STREAM=disable`),
-so the offending request never happens. It is harmless on fixed DSH versions — if your
-DSH already has the fix, there is nothing to do — and will be removed once the host fix
-is widely available.
+so the offending request never happens. The preload resolves the copies through `mqtt`
+and `mqtt-packet → bl`, so it covers both a hoisted and a split install, and the plugin
+declares **no `readable-stream` dependency of its own**. Pinning one exact transitive
+version made every plugin upgrade re-resolve that version, which could fail the upgrade;
+the copy that matters is installed by `mqtt` itself. It is harmless on fixed DSH
+versions — if your DSH already has the fix, there is nothing to do — and will be removed
+once the host fix is widely available.
 
 - Affected: DSH `0.1.7-rc.2` … `0.2.2-alpha.2` (including desktop `0.2.1-rc.5`); the
   symptom is `TypeError: createRequire.resolve.paths is not a function or its return value is not iterable`
