@@ -90,6 +90,9 @@ once the host fix is widely available.
 
 - Affected: DSH `0.1.7-rc.2` … `0.2.2-alpha.2` (including desktop `0.2.1-rc.5`); the
   symptom is `TypeError: createRequire.resolve.paths is not a function or its return value is not iterable`
+- Supported host range: `engines.dsh` in `package.json` is
+  `>=0.1.7-rc.2 <0.3.0-0`, which the plugin market uses for its compatibility verdict;
+  widen it only after testing a newer host release line
 - Unaffected: plugins without `readable-stream@4.x` in their tree; fixed DSH builds
 - This workaround covers the `readable-stream` family only; `punycode/`, `buffer/index`
   and similar cases still require the host fix.

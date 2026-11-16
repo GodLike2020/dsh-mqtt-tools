@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.15 — 2026-11-16
+
+Host requirement declared.
+
+- Add `engines.dsh: ">=0.1.7-rc.2 <0.3.0-0"` to `package.json`, the field the DSH host
+  and the plugin market read. The market can now show a compatibility verdict for this
+  plugin instead of "host requirement undeclared", and the host rejects installation on
+  a DSH release outside that range instead of failing later at activation.
+- The range covers every release line the plugin is built and tested against
+  (`0.1.7-rc.2` … `0.2.x`, including prereleases); widen it only after testing a newer
+  line.
+- No runtime or API changes.
+
 ## 0.3.14 — 2026-11-16
 
 Upgrade fix: the plugin no longer pins `readable-stream`.

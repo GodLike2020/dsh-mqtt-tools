@@ -81,6 +81,8 @@ DSH 上无害——若你的 DSH 已修复，无需任何操作；等宿主修�
 
 - 受影响版本：DSH `0.1.7-rc.2` … `0.2.2-alpha.2`（含桌面版 `0.2.1-rc.5`），典型报错为
   `TypeError: createRequire.resolve.paths is not a function or its return value is not iterable`
+- 支持的宿主范围：`package.json` 的 `engines.dsh` 声明为
+  `>=0.1.7-rc.2 <0.3.0-0`，插件市场据此显示兼容性；测试过新的宿主 release line 后再放宽
 - 不受影响：依赖树里没有 `readable-stream@4.x` 的插件；以及修复后的 DSH
 - 该规避只覆盖 `readable-stream` 一族；`punycode/`、`buffer/index` 等同源问题仍需
   宿主修复

@@ -58,6 +58,13 @@ await runSuite(suite, async () => {
     assert(manifest.dependencies['mqtt-packet'] !== undefined, 'mqtt-packet stays a direct dependency')
   })
 
+  await suite.test('the plugin declares its DSH host requirement', () => {
+    const manifest = JSON.parse(readFileSync(join(PLUGIN_DIR, 'package.json'), 'utf8'))
+    const range = manifest.engines?.dsh
+    assert(typeof range === 'string' && range.trim() !== '', 'engines.dsh is a non-empty range')
+    assert(/^[~^<>=0-9]/.test(range.trim()), 'engines.dsh starts like a semver range')
+  })
+
   suite.group('split install primes every copy')
 
   await suite.test('both the mqtt and the mqtt-packet -> bl copies are primed', async () => {
